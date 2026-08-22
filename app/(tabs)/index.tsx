@@ -1,13 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { AddMangaForm } from '@/components/AddMangaForm';
 import { EditMangaForm } from '@/components/EditMangaForm';
 import { MangaCard } from '@/components/MangaCard';
-import type { Manga } from '@/types/manga';
-
-type Filter = 'all' | 'inProgress' | 'upToDate';
+import { MangaFilters } from '@/components/MangaFilters';
+import type { Manga, MangaFilter } from '@/types/manga';
 
 const MANGAS_STORAGE_KEY = 'mangas';
 
@@ -19,7 +18,7 @@ export default function HomeScreen() {
     { id: 4, title: 'Kingdom', chaptersRead: 35, totalChapters: 40 },
     { id: 5, title: 'Kagurabachi', chaptersRead: 35, totalChapters: 100 },
   ]);
-  const [selectedFilter, setSelectedFilter] = useState<Filter>('all');
+  const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [newMangaTitle, setNewMangaTitle] = useState('');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
@@ -199,57 +198,12 @@ export default function HomeScreen() {
       <Text style={styles.title}>Manga Tracker</Text>
       <Text style={styles.subtitle}>Ma bibliothèque</Text>
 
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Rechercher un manga..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
+      <MangaFilters
+        searchQuery={searchQuery}
+        selectedFilter={selectedFilter}
+        onSearchChange={setSearchQuery}
+        onFilterChange={setSelectedFilter}
       />
-
-      <View style={styles.filterRow}>
-        <Pressable
-          onPress={() => setSelectedFilter('all')}
-          style={[
-            styles.filterButton,
-            selectedFilter === 'all' && styles.filterButtonSelected,
-          ]}>
-          <Text
-            style={[
-              styles.filterButtonText,
-              selectedFilter === 'all' && styles.filterButtonTextSelected,
-            ]}>
-            Tous
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setSelectedFilter('inProgress')}
-          style={[
-            styles.filterButton,
-            selectedFilter === 'inProgress' && styles.filterButtonSelected,
-          ]}>
-          <Text
-            style={[
-              styles.filterButtonText,
-              selectedFilter === 'inProgress' && styles.filterButtonTextSelected,
-            ]}>
-            En cours
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setSelectedFilter('upToDate')}
-          style={[
-            styles.filterButton,
-            selectedFilter === 'upToDate' && styles.filterButtonSelected,
-          ]}>
-          <Text
-            style={[
-              styles.filterButtonText,
-              selectedFilter === 'upToDate' && styles.filterButtonTextSelected,
-            ]}>
-            À jour
-          </Text>
-        </Pressable>
-      </View>
 
       <AddMangaForm
         title={newMangaTitle}
@@ -311,36 +265,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#555555',
     marginBottom: 16,
-  },
-  searchInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  filterRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 16,
-  },
-  filterButton: {
-    backgroundColor: '#eeeeee',
-    borderRadius: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  filterButtonSelected: {
-    backgroundColor: '#2563eb',
-  },
-  filterButtonText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333333',
-  },
-  filterButtonTextSelected: {
-    color: '#ffffff',
   },
   emptyText: {
     fontSize: 14,

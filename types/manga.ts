@@ -4,3 +4,5 @@ export type Manga = {
   chaptersRead: number;
   totalChapters: number;
 };
+
+export type MangaFilter = 'all' | 'inProgress' | 'upToDate';
