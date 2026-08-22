@@ -14,20 +14,22 @@ const MANGAS_STORAGE_KEY = 'mangas';
 export default function HomeScreen() {
   const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
-    { id: 1, title: 'One Piece', chaptersRead: 112, totalChapters: 115 },
-    { id: 2, title: 'Berserk', chaptersRead: 50, totalChapters: 60 },
-    { id: 3, title: 'Vinland Saga', chaptersRead: 80, totalChapters: 90 },
-    { id: 4, title: 'Kingdom', chaptersRead: 35, totalChapters: 40 },
-    { id: 5, title: 'Kagurabachi', chaptersRead: 35, totalChapters: 100 },
+    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115 },
+    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60 },
+    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90 },
+    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40 },
+    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100 },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [newMangaTitle, setNewMangaTitle] = useState('');
+  const [newMangaAuthor, setNewMangaAuthor] = useState('');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
   const [formError, setFormError] = useState('');
   const [isStorageLoaded, setIsStorageLoaded] = useState(false);
   const [editingMangaId, setEditingMangaId] = useState<number | null>(null);
   const [editMangaTitle, setEditMangaTitle] = useState('');
+  const [editMangaAuthor, setEditMangaAuthor] = useState('');
   const [editMangaTotalChapters, setEditMangaTotalChapters] = useState('');
 
   useEffect(() => {
@@ -36,7 +38,24 @@ export default function HomeScreen() {
         const storedValue = await AsyncStorage.getItem(MANGAS_STORAGE_KEY);
         if (storedValue !== null) {
           const parsedMangas: Manga[] = JSON.parse(storedValue);
-          setMangas(parsedMangas);
+          const demoAuthors: Record<string, string> = {
+            'One Piece': 'Eiichiro Oda',
+            'Berserk': 'Kentaro Miura',
+            'Vinland Saga': 'Makoto Yukimura',
+            'Kingdom': 'Yasuhisa Hara',
+            'Kagurabachi': 'Takeru Hokazono',
+          };
+          const migratedMangas = parsedMangas.map((manga) => {
+            if (typeof manga.author === 'string') {
+              return manga;
+            }
+
+            return {
+              ...manga,
+              author: demoAuthors[manga.title] ?? '',
+            };
+          });
+          setMangas(migratedMangas);
         }
       } catch (error) {
         console.error(error);
@@ -121,28 +140,35 @@ export default function HomeScreen() {
     const newManga: Manga = {
       id: Math.max(0, ...mangas.map((manga) => manga.id)) + 1,
       title,
+      author: newMangaAuthor.trim(),
       chaptersRead: 0,
       totalChapters,
     };
 
     setMangas((currentMangas) => [...currentMangas, newManga]);
     setNewMangaTitle('');
+    setNewMangaAuthor('');
     setNewMangaTotalChapters('');
   }
 
   function openManga(id: number) {
-    router.push(`/manga/${id}`);
+    router.push({
+      pathname: '/manga/[id]',
+      params: { id },
+    });
   }
 
   function startEditingManga(manga: Manga) {
     setEditingMangaId(manga.id);
     setEditMangaTitle(manga.title);
+    setEditMangaAuthor(manga.author);
     setEditMangaTotalChapters(String(manga.totalChapters));
   }
 
   function cancelEditing() {
     setEditingMangaId(null);
     setEditMangaTitle('');
+    setEditMangaAuthor('');
     setEditMangaTotalChapters('');
   }
 
@@ -169,6 +195,7 @@ export default function HomeScreen() {
           ? {
               ...manga,
               title,
+              author: editMangaAuthor.trim(),
               totalChapters,
               chaptersRead: Math.min(manga.chaptersRead, totalChapters),
             }
@@ -213,9 +240,11 @@ export default function HomeScreen() {
 
       <AddMangaForm
         title={newMangaTitle}
+        author={newMangaAuthor}
         totalChapters={newMangaTotalChapters}
         formError={formError}
         onTitleChange={setNewMangaTitle}
+        onAuthorChange={setNewMangaAuthor}
         onTotalChaptersChange={setNewMangaTotalChapters}
         onSubmit={addManga}
       />
@@ -224,8 +253,10 @@ export default function HomeScreen() {
         <EditMangaForm
           mangaTitle={editingManga.title}
           title={editMangaTitle}
+          author={editMangaAuthor}
           totalChapters={editMangaTotalChapters}
           onTitleChange={setEditMangaTitle}
+          onAuthorChange={setEditMangaAuthor}
           onTotalChaptersChange={setEditMangaTotalChapters}
           onCancel={cancelEditing}
           onSave={saveEditingManga}

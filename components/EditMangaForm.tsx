@@ -3,8 +3,10 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 type EditMangaFormProps = {
   mangaTitle: string;
   title: string;
+  author: string;
   totalChapters: string;
   onTitleChange: (text: string) => void;
+  onAuthorChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
   onCancel: () => void;
   onSave: () => void;
@@ -13,8 +15,10 @@ type EditMangaFormProps = {
 export function EditMangaForm({
   mangaTitle,
   title,
+  author,
   totalChapters,
   onTitleChange,
+  onAuthorChange,
   onTotalChaptersChange,
   onCancel,
   onSave,
@@ -27,6 +31,12 @@ export function EditMangaForm({
         placeholder="Titre du manga"
         value={title}
         onChangeText={onTitleChange}
+      />
+      <TextInput
+        style={styles.formInput}
+        placeholder="Auteur"
+        value={author}
+        onChangeText={onAuthorChange}
       />
       <TextInput
         style={styles.formInput}
