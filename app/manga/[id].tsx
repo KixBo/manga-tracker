@@ -36,6 +36,10 @@ export default function MangaScreen() {
   const remainingChapters = manga
     ? manga.totalChapters - manga.chaptersRead
     : 0;
+  const progressPercent =
+    manga === null || manga.totalChapters === 0
+      ? 0
+      : (manga.chaptersRead / manga.totalChapters) * 100;
 
   return (
     <View style={styles.container}>
@@ -46,6 +50,12 @@ export default function MangaScreen() {
           <Text style={styles.progressText}>
             {manga.chaptersRead} / {manga.totalChapters} chapitres lus
           </Text>
+          <View style={styles.progressRow}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${progressPercent}%` }]} />
+            </View>
+            <Text style={styles.percentText}>{Math.round(progressPercent)} %</Text>
+          </View>
           {remainingChapters === 0 ? (
             <Text style={styles.remainingText}>À jour</Text>
           ) : remainingChapters === 1 ? (
@@ -89,5 +99,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777777',
     marginTop: 4,
+  },
+  progressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    gap: 8,
+  },
+  progressBar: {
+    flex: 1,
+    height: 8,
+    backgroundColor: '#dddddd',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#2563eb',
+    borderRadius: 4,
+  },
+  percentText: {
+    fontSize: 14,
+    color: '#555555',
   },
 });
