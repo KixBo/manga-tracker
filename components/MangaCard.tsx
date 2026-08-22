@@ -8,9 +8,10 @@ type MangaCardProps = {
   onDecrement: () => void;
   onDelete: () => void;
   onEdit: () => void;
+  onOpen: () => void;
 };
 
-export function MangaCard({ title, chaptersRead, totalChapters, onIncrement, onDecrement, onDelete, onEdit }: MangaCardProps) {
+export function MangaCard({ title, chaptersRead, totalChapters, onIncrement, onDecrement, onDelete, onEdit, onOpen }: MangaCardProps) {
   const progressPercent =
     totalChapters === 0 ? 0 : (chaptersRead / totalChapters) * 100;
   const remainingChapters = totalChapters - chaptersRead;
@@ -43,6 +44,9 @@ export function MangaCard({ title, chaptersRead, totalChapters, onIncrement, onD
           onPress={onIncrement}
           style={chaptersRead === totalChapters ? styles.buttonDisabled : undefined}>
           <Text style={styles.buttonText}>+1 chapitre</Text>
+        </Pressable>
+        <Pressable onPress={onOpen}>
+          <Text style={styles.buttonText}>Voir la fiche</Text>
         </Pressable>
         <Pressable onPress={onEdit}>
           <Text style={styles.editText}>Modifier</Text>
@@ -91,6 +95,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 16,
   },
   buttonText: {

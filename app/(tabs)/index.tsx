@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 
@@ -11,6 +12,7 @@ import type { Manga, MangaFilter } from '@/types/manga';
 const MANGAS_STORAGE_KEY = 'mangas';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
     { id: 1, title: 'One Piece', chaptersRead: 112, totalChapters: 115 },
     { id: 2, title: 'Berserk', chaptersRead: 50, totalChapters: 60 },
@@ -128,6 +130,10 @@ export default function HomeScreen() {
     setNewMangaTotalChapters('');
   }
 
+  function openManga(id: number) {
+    router.push(`/manga/${id}`);
+  }
+
   function startEditingManga(manga: Manga) {
     setEditingMangaId(manga.id);
     setEditMangaTitle(manga.title);
@@ -239,6 +245,7 @@ export default function HomeScreen() {
             onDecrement={() => decrementChapter(manga.id)}
             onDelete={() => deleteManga(manga.id, manga.title)}
             onEdit={() => startEditingManga(manga)}
+            onOpen={() => openManga(manga.id)}
           />
         ))
       )}
