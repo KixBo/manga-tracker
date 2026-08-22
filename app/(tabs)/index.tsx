@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { AddMangaForm } from '@/components/AddMangaForm';
 import { MangaCard } from '@/components/MangaCard';
 import type { Manga } from '@/types/manga';
 
@@ -249,25 +250,14 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      <TextInput
-        style={styles.formInput}
-        placeholder="Titre du manga"
-        value={newMangaTitle}
-        onChangeText={setNewMangaTitle}
+      <AddMangaForm
+        title={newMangaTitle}
+        totalChapters={newMangaTotalChapters}
+        formError={formError}
+        onTitleChange={setNewMangaTitle}
+        onTotalChaptersChange={setNewMangaTotalChapters}
+        onSubmit={addManga}
       />
-      <TextInput
-        style={styles.formInput}
-        placeholder="Nombre total de chapitres"
-        value={newMangaTotalChapters}
-        onChangeText={setNewMangaTotalChapters}
-        keyboardType="numeric"
-      />
-      {formError !== '' && (
-        <Text style={styles.formError}>{formError}</Text>
-      )}
-      <Pressable style={styles.addButton} onPress={addManga}>
-        <Text style={styles.addButtonText}>Ajouter le manga</Text>
-      </Pressable>
 
       {editingManga && (
         <>
@@ -377,11 +367,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    marginBottom: 8,
-  },
-  formError: {
-    color: '#dc2626',
-    fontSize: 14,
     marginBottom: 8,
   },
   addButton: {
