@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { AddMangaForm } from '@/components/AddMangaForm';
+import { EditMangaForm } from '@/components/EditMangaForm';
 import { MangaCard } from '@/components/MangaCard';
 import type { Manga } from '@/types/manga';
 
@@ -260,30 +261,15 @@ export default function HomeScreen() {
       />
 
       {editingManga && (
-        <>
-          <Text style={styles.subtitle}>Modification de : {editingManga.title}</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Titre du manga"
-            value={editMangaTitle}
-            onChangeText={setEditMangaTitle}
-          />
-          <TextInput
-            style={styles.formInput}
-            placeholder="Nombre total de chapitres"
-            value={editMangaTotalChapters}
-            onChangeText={setEditMangaTotalChapters}
-            keyboardType="numeric"
-          />
-          <View style={styles.filterRow}>
-            <Pressable style={styles.filterButton} onPress={cancelEditing}>
-              <Text style={styles.filterButtonText}>Annuler</Text>
-            </Pressable>
-            <Pressable style={styles.addButton} onPress={saveEditingManga}>
-              <Text style={styles.addButtonText}>Enregistrer</Text>
-            </Pressable>
-          </View>
-        </>
+        <EditMangaForm
+          mangaTitle={editingManga.title}
+          title={editMangaTitle}
+          totalChapters={editMangaTotalChapters}
+          onTitleChange={setEditMangaTitle}
+          onTotalChaptersChange={setEditMangaTotalChapters}
+          onCancel={cancelEditing}
+          onSave={saveEditingManga}
+        />
       )}
 
       {filteredMangas.length === 0 ? (
@@ -360,25 +346,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777777',
     marginBottom: 12,
-  },
-  formInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  addButton: {
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  addButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
