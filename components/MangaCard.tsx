@@ -48,26 +48,34 @@ export function MangaCard({ title, author, status, coverUrl, chaptersRead, total
           </View>
         </View>
       </View>
-      <View style={styles.buttonRow}>
+      <View style={styles.chapterButtonRow}>
         <Pressable
           disabled={chaptersRead === 0}
           onPress={onDecrement}
-          style={chaptersRead === 0 ? styles.buttonDisabled : undefined}>
-          <Text style={styles.buttonText}>-1 chapitre</Text>
+          style={[
+            styles.chapterButton,
+            chaptersRead === 0 && styles.buttonDisabled,
+          ]}>
+          <Text style={styles.chapterButtonText}>-1 chapitre</Text>
         </Pressable>
         <Pressable
           disabled={chaptersRead === totalChapters}
           onPress={onIncrement}
-          style={chaptersRead === totalChapters ? styles.buttonDisabled : undefined}>
-          <Text style={styles.buttonText}>+1 chapitre</Text>
+          style={[
+            styles.chapterButton,
+            chaptersRead === totalChapters && styles.buttonDisabled,
+          ]}>
+          <Text style={styles.chapterButtonText}>+1 chapitre</Text>
         </Pressable>
-        <Pressable onPress={onOpen}>
+      </View>
+      <View style={styles.actionButtonRow}>
+        <Pressable onPress={onOpen} style={styles.actionButton}>
           <Text style={styles.buttonText}>Voir la fiche</Text>
         </Pressable>
-        <Pressable onPress={onEdit}>
+        <Pressable onPress={onEdit} style={styles.actionButton}>
           <Text style={styles.editText}>Modifier</Text>
         </Pressable>
-        <Pressable onPress={onDelete}>
+        <Pressable onPress={onDelete} style={styles.actionButton}>
           <Text style={styles.deleteText}>Supprimer</Text>
         </Pressable>
       </View>
@@ -131,13 +139,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#2563eb',
     borderRadius: 4,
   },
-  buttonRow: {
+  chapterButtonRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 16,
+    marginTop: 8,
+  },
+  actionButtonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 4,
+  },
+  actionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
+  chapterButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  chapterButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
   buttonText: {
-    marginTop: 8,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#2563eb',
@@ -146,13 +174,11 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   editText: {
-    marginTop: 8,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#2563eb',
   },
   deleteText: {
-    marginTop: 8,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#dc2626',
