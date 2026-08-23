@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Manga } from '@/types/manga';
 
@@ -9,29 +9,32 @@ const MANGAS_STORAGE_KEY = 'mangas';
 
 export default function MangaScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const [manga, setManga] = useState<Manga | null>(null);
 
-  useEffect(() => {
-    async function loadManga() {
-      try {
-        const storedValue = await AsyncStorage.getItem(MANGAS_STORAGE_KEY);
-        if (storedValue === null) {
+  useFocusEffect(
+    useCallback(() => {
+      async function loadManga() {
+        try {
+          const storedValue = await AsyncStorage.getItem(MANGAS_STORAGE_KEY);
+          if (storedValue === null) {
+            setManga(null);
+            return;
+          }
+
+          const parsedMangas: Manga[] = JSON.parse(storedValue);
+          const mangaId = Number(id);
+          const foundManga = parsedMangas.find((item) => item.id === mangaId) ?? null;
+          setManga(foundManga);
+        } catch (error) {
+          console.error(error);
           setManga(null);
-          return;
         }
-
-        const parsedMangas: Manga[] = JSON.parse(storedValue);
-        const mangaId = Number(id);
-        const foundManga = parsedMangas.find((item) => item.id === mangaId) ?? null;
-        setManga(foundManga);
-      } catch (error) {
-        console.error(error);
-        setManga(null);
       }
-    }
 
-    loadManga();
-  }, [id]);
+      loadManga();
+    }, [id])
+  );
 
   const remainingChapters = manga
     ? manga.totalChapters - manga.chaptersRead
@@ -72,6 +75,16 @@ export default function MangaScreen() {
               {remainingChapters} chapitres restants
             </Text>
           )}
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: '/manga/[id]/edit',
+                params: { id: manga.id },
+              } as unknown as Href)
+            }
+            style={styles.actionButton}>
+            <Text style={styles.editText}>Modifier</Text>
+          </Pressable>
         </>
       ) : (
         <Text style={styles.subtitle}>Manga introuvable</Text>
@@ -144,5 +157,15 @@ const styles = StyleSheet.create({
   percentText: {
     fontSize: 14,
     color: '#555555',
+  },
+  actionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    alignSelf: 'flex-start',
+  },
+  editText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#2563eb',
   },
 });
