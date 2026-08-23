@@ -15,6 +15,7 @@ export default function EditMangaScreen() {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
+  const [description, setDescription] = useState('');
   const [totalChapters, setTotalChapters] = useState('');
   const [status, setStatus] = useState<Manga['status']>('ongoing');
 
@@ -36,6 +37,7 @@ export default function EditMangaScreen() {
           setTitle(foundManga.title);
           setAuthor(foundManga.author);
           setCoverUrl(foundManga.coverUrl);
+          setDescription(foundManga.description ?? '');
           setTotalChapters(String(foundManga.totalChapters));
           setStatus(foundManga.status);
         }
@@ -74,6 +76,7 @@ export default function EditMangaScreen() {
               title: trimmedTitle,
               author: author.trim(),
               coverUrl: coverUrl.trim(),
+              description: description.trim(),
               totalChapters: nextTotalChapters,
               status,
               chaptersRead: Math.min(item.chaptersRead, nextTotalChapters),
@@ -100,11 +103,13 @@ export default function EditMangaScreen() {
           title={title}
           author={author}
           coverUrl={coverUrl}
+          description={description}
           totalChapters={totalChapters}
           status={status}
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
           onCoverUrlChange={setCoverUrl}
+          onDescriptionChange={setDescription}
           onTotalChaptersChange={setTotalChapters}
           onStatusChange={setStatus}
           onCancel={() => router.back()}

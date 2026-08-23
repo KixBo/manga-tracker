@@ -33,6 +33,7 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
             ? 'completed'
             : 'ongoing',
       coverUrl: typeof manga.coverUrl === 'string' ? manga.coverUrl : '',
+      description: typeof manga.description === 'string' ? manga.description : '',
     };
   });
 }
@@ -40,11 +41,11 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
 export default function HomeScreen() {
   const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
-    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '' },
-    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '' },
-    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '' },
-    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '' },
-    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '' },
+    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '', description: '' },
+    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '', description: '' },
+    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '', description: '' },
+    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '', description: '' },
+    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '', description: '' },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [selectedSort, setSelectedSort] = useState<MangaSort>('az');
@@ -53,6 +54,7 @@ export default function HomeScreen() {
   const [newMangaTitle, setNewMangaTitle] = useState('');
   const [newMangaAuthor, setNewMangaAuthor] = useState('');
   const [newMangaCoverUrl, setNewMangaCoverUrl] = useState('');
+  const [newMangaDescription, setNewMangaDescription] = useState('');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
   const [newMangaStatus, setNewMangaStatus] = useState<Manga['status']>('ongoing');
   const [formError, setFormError] = useState('');
@@ -153,6 +155,7 @@ export default function HomeScreen() {
       title,
       author: newMangaAuthor.trim(),
       coverUrl: newMangaCoverUrl.trim(),
+      description: newMangaDescription.trim(),
       chaptersRead: 0,
       totalChapters,
       status: newMangaStatus,
@@ -162,6 +165,7 @@ export default function HomeScreen() {
     setNewMangaTitle('');
     setNewMangaAuthor('');
     setNewMangaCoverUrl('');
+    setNewMangaDescription('');
     setNewMangaTotalChapters('');
     setNewMangaStatus('ongoing');
     setIsAddFormVisible(false);
@@ -214,12 +218,14 @@ export default function HomeScreen() {
           title={newMangaTitle}
           author={newMangaAuthor}
           coverUrl={newMangaCoverUrl}
+          description={newMangaDescription}
           totalChapters={newMangaTotalChapters}
           status={newMangaStatus}
           formError={formError}
           onTitleChange={setNewMangaTitle}
           onAuthorChange={setNewMangaAuthor}
           onCoverUrlChange={setNewMangaCoverUrl}
+          onDescriptionChange={setNewMangaDescription}
           onTotalChaptersChange={setNewMangaTotalChapters}
           onStatusChange={setNewMangaStatus}
           onSubmit={addManga}
