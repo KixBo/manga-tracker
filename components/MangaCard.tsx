@@ -1,7 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 type MangaCardProps = {
   title: string;
+  coverUrl: string;
   chaptersRead: number;
   totalChapters: number;
   onIncrement: () => void;
@@ -11,13 +12,16 @@ type MangaCardProps = {
   onOpen: () => void;
 };
 
-export function MangaCard({ title, chaptersRead, totalChapters, onIncrement, onDecrement, onDelete, onEdit, onOpen }: MangaCardProps) {
+export function MangaCard({ title, coverUrl, chaptersRead, totalChapters, onIncrement, onDecrement, onDelete, onEdit, onOpen }: MangaCardProps) {
   const progressPercent =
     totalChapters === 0 ? 0 : (chaptersRead / totalChapters) * 100;
   const remainingChapters = totalChapters - chaptersRead;
 
   return (
     <View style={styles.card}>
+      {coverUrl !== '' && (
+        <Image source={{ uri: coverUrl }} style={styles.coverImage} />
+      )}
       <Text style={styles.cardTitle}>{title}</Text>
       <Text style={styles.cardSubtitle}>
         {chaptersRead} / {totalChapters} chapitres lus
@@ -65,6 +69,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
+  },
+  coverImage: {
+    width: 80,
+    height: 120,
+    borderRadius: 8,
   },
   cardTitle: {
     fontSize: 18,

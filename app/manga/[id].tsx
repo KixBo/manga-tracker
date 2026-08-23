@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import type { Manga } from '@/types/manga';
 
@@ -46,6 +46,9 @@ export default function MangaScreen() {
       <Text style={styles.title}>Fiche manga</Text>
       {manga ? (
         <>
+          {manga.coverUrl !== '' && (
+            <Image source={{ uri: manga.coverUrl }} style={styles.coverImage} />
+          )}
           <Text style={styles.subtitle}>{manga.title}</Text>
           <Text style={styles.authorText}>Auteur : {manga.author}</Text>
           <Text style={styles.statusText}>
@@ -89,6 +92,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111111',
     marginBottom: 8,
+  },
+  coverImage: {
+    width: 160,
+    height: 240,
+    borderRadius: 8,
+    marginBottom: 12,
   },
   subtitle: {
     fontSize: 18,

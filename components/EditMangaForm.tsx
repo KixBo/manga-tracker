@@ -6,10 +6,12 @@ type EditMangaFormProps = {
   mangaTitle: string;
   title: string;
   author: string;
+  coverUrl: string;
   totalChapters: string;
   status: Manga['status'];
   onTitleChange: (text: string) => void;
   onAuthorChange: (text: string) => void;
+  onCoverUrlChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
   onStatusChange: (status: Manga['status']) => void;
   onCancel: () => void;
@@ -20,10 +22,12 @@ export function EditMangaForm({
   mangaTitle,
   title,
   author,
+  coverUrl,
   totalChapters,
   status,
   onTitleChange,
   onAuthorChange,
+  onCoverUrlChange,
   onTotalChaptersChange,
   onStatusChange,
   onCancel,
@@ -43,6 +47,12 @@ export function EditMangaForm({
         placeholder="Auteur"
         value={author}
         onChangeText={onAuthorChange}
+      />
+      <TextInput
+        style={styles.formInput}
+        placeholder="URL de la couverture"
+        value={coverUrl}
+        onChangeText={onCoverUrlChange}
       />
       <TextInput
         style={styles.formInput}

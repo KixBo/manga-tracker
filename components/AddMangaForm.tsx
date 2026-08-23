@@ -5,11 +5,13 @@ import type { Manga } from '@/types/manga';
 type AddMangaFormProps = {
   title: string;
   author: string;
+  coverUrl: string;
   totalChapters: string;
   status: Manga['status'];
   formError: string;
   onTitleChange: (text: string) => void;
   onAuthorChange: (text: string) => void;
+  onCoverUrlChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
   onStatusChange: (status: Manga['status']) => void;
   onSubmit: () => void;
@@ -18,11 +20,13 @@ type AddMangaFormProps = {
 export function AddMangaForm({
   title,
   author,
+  coverUrl,
   totalChapters,
   status,
   formError,
   onTitleChange,
   onAuthorChange,
+  onCoverUrlChange,
   onTotalChaptersChange,
   onStatusChange,
   onSubmit,
@@ -40,6 +44,12 @@ export function AddMangaForm({
         placeholder="Auteur"
         value={author}
         onChangeText={onAuthorChange}
+      />
+      <TextInput
+        style={styles.formInput}
+        placeholder="URL de la couverture"
+        value={coverUrl}
+        onChangeText={onCoverUrlChange}
       />
       <TextInput
         style={styles.formInput}

@@ -5,6 +5,7 @@ export type Manga = {
   chaptersRead: number;
   totalChapters: number;
   status: 'ongoing' | 'completed';
+  coverUrl: string;
 };
 
 export type MangaFilter = 'all' | 'inProgress' | 'upToDate';
