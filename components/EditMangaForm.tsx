@@ -1,3 +1,4 @@
+import * as ImagePicker from 'expo-image-picker';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import type { Manga } from '@/types/manga';
@@ -45,6 +46,18 @@ export function EditMangaForm({
   onCancel,
   onSave,
 }: EditMangaFormProps) {
+  async function pickCoverImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      onCoverUrlChange(result.assets[0].uri);
+    }
+  }
+
   return (
     <>
       <Text style={styles.subtitle}>Modification de : {mangaTitle}</Text>
@@ -60,12 +73,9 @@ export function EditMangaForm({
         value={author}
         onChangeText={onAuthorChange}
       />
-      <TextInput
-        style={styles.formInput}
-        placeholder="URL de la couverture"
-        value={coverUrl}
-        onChangeText={onCoverUrlChange}
-      />
+      <Pressable style={styles.filterButton} onPress={pickCoverImage}>
+        <Text style={styles.filterButtonText}>Choisir une nouvelle couverture</Text>
+      </Pressable>
       <TextInput
         style={styles.formInput}
         placeholder="Description / Synopsis"
