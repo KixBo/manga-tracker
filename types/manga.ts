@@ -9,3 +9,5 @@ export type Manga = {
 };
 
 export type MangaFilter = 'all' | 'ongoing' | 'completed';
+
+export type MangaSort = 'az' | 'za';

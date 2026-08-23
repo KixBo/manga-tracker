@@ -1,19 +1,23 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import type { MangaFilter } from '@/types/manga';
+import type { MangaFilter, MangaSort } from '@/types/manga';
 
 type MangaFiltersProps = {
   searchQuery: string;
   selectedFilter: MangaFilter;
+  selectedSort: MangaSort;
   onSearchChange: (text: string) => void;
   onFilterChange: (filter: MangaFilter) => void;
+  onSortChange: (sort: MangaSort) => void;
 };
 
 export function MangaFilters({
   searchQuery,
   selectedFilter,
+  selectedSort,
   onSearchChange,
   onFilterChange,
+  onSortChange,
 }: MangaFiltersProps) {
   return (
     <>
@@ -65,6 +69,37 @@ export function MangaFilters({
               selectedFilter === 'completed' && styles.filterButtonTextSelected,
             ]}>
             Terminés
+          </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.filterRow}>
+        <Pressable
+          onPress={() => onSortChange('az')}
+          style={[
+            styles.filterButton,
+            selectedSort === 'az' && styles.filterButtonSelected,
+          ]}>
+          <Text
+            style={[
+              styles.filterButtonText,
+              selectedSort === 'az' && styles.filterButtonTextSelected,
+            ]}>
+            A → Z
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onSortChange('za')}
+          style={[
+            styles.filterButton,
+            selectedSort === 'za' && styles.filterButtonSelected,
+          ]}>
+          <Text
+            style={[
+              styles.filterButtonText,
+              selectedSort === 'za' && styles.filterButtonTextSelected,
+            ]}>
+            Z → A
           </Text>
         </Pressable>
       </View>

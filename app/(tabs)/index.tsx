@@ -7,7 +7,7 @@ import { AddMangaForm } from '@/components/AddMangaForm';
 import { EditMangaForm } from '@/components/EditMangaForm';
 import { MangaCard } from '@/components/MangaCard';
 import { MangaFilters } from '@/components/MangaFilters';
-import type { Manga, MangaFilter } from '@/types/manga';
+import type { Manga, MangaFilter, MangaSort } from '@/types/manga';
 
 const MANGAS_STORAGE_KEY = 'mangas';
 
@@ -21,6 +21,7 @@ export default function HomeScreen() {
     { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '' },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
+  const [selectedSort, setSelectedSort] = useState<MangaSort>('az');
   const [searchQuery, setSearchQuery] = useState('');
   const [newMangaTitle, setNewMangaTitle] = useState('');
   const [newMangaAuthor, setNewMangaAuthor] = useState('');
@@ -242,6 +243,9 @@ export default function HomeScreen() {
       return manga.status === 'completed';
     }
     return true;
+  }).sort((a, b) => {
+    const comparison = a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' });
+    return selectedSort === 'za' ? -comparison : comparison;
   });
 
   const editingManga = mangas.find((manga) => manga.id === editingMangaId);
@@ -254,8 +258,10 @@ export default function HomeScreen() {
       <MangaFilters
         searchQuery={searchQuery}
         selectedFilter={selectedFilter}
+        selectedSort={selectedSort}
         onSearchChange={setSearchQuery}
         onFilterChange={setSelectedFilter}
+        onSortChange={setSelectedSort}
       />
 
       <AddMangaForm
