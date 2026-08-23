@@ -40,31 +40,31 @@ export function MangaFilters({
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => onFilterChange('inProgress')}
+          onPress={() => onFilterChange('ongoing')}
           style={[
             styles.filterButton,
-            selectedFilter === 'inProgress' && styles.filterButtonSelected,
+            selectedFilter === 'ongoing' && styles.filterButtonSelected,
           ]}>
           <Text
             style={[
               styles.filterButtonText,
-              selectedFilter === 'inProgress' && styles.filterButtonTextSelected,
+              selectedFilter === 'ongoing' && styles.filterButtonTextSelected,
             ]}>
             En cours
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => onFilterChange('upToDate')}
+          onPress={() => onFilterChange('completed')}
           style={[
             styles.filterButton,
-            selectedFilter === 'upToDate' && styles.filterButtonSelected,
+            selectedFilter === 'completed' && styles.filterButtonSelected,
           ]}>
           <Text
             style={[
               styles.filterButtonText,
-              selectedFilter === 'upToDate' && styles.filterButtonTextSelected,
+              selectedFilter === 'completed' && styles.filterButtonTextSelected,
             ]}>
-            À jour
+            Terminés
           </Text>
         </Pressable>
       </View>

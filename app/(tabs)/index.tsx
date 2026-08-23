@@ -235,11 +235,11 @@ export default function HomeScreen() {
       return false;
     }
 
-    if (selectedFilter === 'inProgress') {
-      return manga.chaptersRead < manga.totalChapters;
+    if (selectedFilter === 'ongoing') {
+      return manga.status === 'ongoing';
     }
-    if (selectedFilter === 'upToDate') {
-      return manga.chaptersRead === manga.totalChapters;
+    if (selectedFilter === 'completed') {
+      return manga.status === 'completed';
     }
     return true;
   });

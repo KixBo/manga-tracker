@@ -8,4 +8,4 @@ export type Manga = {
   coverUrl: string;
 };
 
-export type MangaFilter = 'all' | 'inProgress' | 'upToDate';
+export type MangaFilter = 'all' | 'ongoing' | 'completed';
