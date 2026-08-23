@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { AddMangaForm } from '@/components/AddMangaForm';
 import { EditMangaForm } from '@/components/EditMangaForm';
@@ -23,6 +23,7 @@ export default function HomeScreen() {
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [selectedSort, setSelectedSort] = useState<MangaSort>('az');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [newMangaTitle, setNewMangaTitle] = useState('');
   const [newMangaAuthor, setNewMangaAuthor] = useState('');
   const [newMangaCoverUrl, setNewMangaCoverUrl] = useState('');
@@ -164,6 +165,7 @@ export default function HomeScreen() {
     setNewMangaCoverUrl('');
     setNewMangaTotalChapters('');
     setNewMangaStatus('ongoing');
+    setIsAddFormVisible(false);
   }
 
   function openManga(id: number) {
@@ -264,20 +266,29 @@ export default function HomeScreen() {
         onSortChange={setSelectedSort}
       />
 
-      <AddMangaForm
-        title={newMangaTitle}
-        author={newMangaAuthor}
-        coverUrl={newMangaCoverUrl}
-        totalChapters={newMangaTotalChapters}
-        status={newMangaStatus}
-        formError={formError}
-        onTitleChange={setNewMangaTitle}
-        onAuthorChange={setNewMangaAuthor}
-        onCoverUrlChange={setNewMangaCoverUrl}
-        onTotalChaptersChange={setNewMangaTotalChapters}
-        onStatusChange={setNewMangaStatus}
-        onSubmit={addManga}
-      />
+      {isAddFormVisible ? (
+        <AddMangaForm
+          title={newMangaTitle}
+          author={newMangaAuthor}
+          coverUrl={newMangaCoverUrl}
+          totalChapters={newMangaTotalChapters}
+          status={newMangaStatus}
+          formError={formError}
+          onTitleChange={setNewMangaTitle}
+          onAuthorChange={setNewMangaAuthor}
+          onCoverUrlChange={setNewMangaCoverUrl}
+          onTotalChaptersChange={setNewMangaTotalChapters}
+          onStatusChange={setNewMangaStatus}
+          onSubmit={addManga}
+          onCancel={() => setIsAddFormVisible(false)}
+        />
+      ) : (
+        <Pressable
+          style={styles.addMangaButton}
+          onPress={() => setIsAddFormVisible(true)}>
+          <Text style={styles.addMangaButtonText}>+ Ajouter un manga</Text>
+        </Pressable>
+      )}
 
       {editingManga && (
         <EditMangaForm
@@ -345,5 +356,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777777',
     marginBottom: 12,
+  },
+  addMangaButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  addMangaButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

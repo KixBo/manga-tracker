@@ -15,6 +15,7 @@ type AddMangaFormProps = {
   onTotalChaptersChange: (text: string) => void;
   onStatusChange: (status: Manga['status']) => void;
   onSubmit: () => void;
+  onCancel: () => void;
 };
 
 export function AddMangaForm({
@@ -30,6 +31,7 @@ export function AddMangaForm({
   onTotalChaptersChange,
   onStatusChange,
   onSubmit,
+  onCancel,
 }: AddMangaFormProps) {
   return (
     <>
@@ -94,6 +96,9 @@ export function AddMangaForm({
       <Pressable style={styles.addButton} onPress={onSubmit}>
         <Text style={styles.addButtonText}>Ajouter le manga</Text>
       </Pressable>
+      <Pressable style={styles.cancelButton} onPress={onCancel}>
+        <Text style={styles.cancelButtonText}>Annuler</Text>
+      </Pressable>
     </>
   );
 }
@@ -143,6 +148,18 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cancelButton: {
+    backgroundColor: '#eeeeee',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  cancelButtonText: {
+    color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
   },
