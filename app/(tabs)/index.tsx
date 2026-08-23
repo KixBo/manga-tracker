@@ -298,6 +298,8 @@ export default function HomeScreen() {
           <MangaCard
             key={manga.id}
             title={manga.title}
+            author={manga.author}
+            status={manga.status}
             coverUrl={manga.coverUrl}
             chaptersRead={manga.chaptersRead}
             totalChapters={manga.totalChapters}
