@@ -1,13 +1,17 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import type { Manga } from '@/types/manga';
+
 type EditMangaFormProps = {
   mangaTitle: string;
   title: string;
   author: string;
   totalChapters: string;
+  status: Manga['status'];
   onTitleChange: (text: string) => void;
   onAuthorChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
+  onStatusChange: (status: Manga['status']) => void;
   onCancel: () => void;
   onSave: () => void;
 };
@@ -17,9 +21,11 @@ export function EditMangaForm({
   title,
   author,
   totalChapters,
+  status,
   onTitleChange,
   onAuthorChange,
   onTotalChaptersChange,
+  onStatusChange,
   onCancel,
   onSave,
 }: EditMangaFormProps) {
@@ -45,6 +51,36 @@ export function EditMangaForm({
         onChangeText={onTotalChaptersChange}
         keyboardType="numeric"
       />
+      <View style={styles.statusRow}>
+        <Pressable
+          onPress={() => onStatusChange('ongoing')}
+          style={[
+            styles.statusButton,
+            status === 'ongoing' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              status === 'ongoing' && styles.statusButtonTextActive,
+            ]}>
+            En cours
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onStatusChange('completed')}
+          style={[
+            styles.statusButton,
+            status === 'completed' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              status === 'completed' && styles.statusButtonTextActive,
+            ]}>
+            Terminé
+          </Text>
+        </Pressable>
+      </View>
       <View style={styles.filterRow}>
         <Pressable style={styles.filterButton} onPress={onCancel}>
           <Text style={styles.filterButtonText}>Annuler</Text>
@@ -70,6 +106,28 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 8,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  statusButton: {
+    backgroundColor: '#eeeeee',
+    borderRadius: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  statusButtonActive: {
+    backgroundColor: '#2563eb',
+  },
+  statusButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333333',
+  },
+  statusButtonTextActive: {
+    color: '#ffffff',
   },
   filterRow: {
     flexDirection: 'row',

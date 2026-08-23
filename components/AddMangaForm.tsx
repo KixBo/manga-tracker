@@ -1,13 +1,17 @@
-import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+
+import type { Manga } from '@/types/manga';
 
 type AddMangaFormProps = {
   title: string;
   author: string;
   totalChapters: string;
+  status: Manga['status'];
   formError: string;
   onTitleChange: (text: string) => void;
   onAuthorChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
+  onStatusChange: (status: Manga['status']) => void;
   onSubmit: () => void;
 };
 
@@ -15,10 +19,12 @@ export function AddMangaForm({
   title,
   author,
   totalChapters,
+  status,
   formError,
   onTitleChange,
   onAuthorChange,
   onTotalChaptersChange,
+  onStatusChange,
   onSubmit,
 }: AddMangaFormProps) {
   return (
@@ -42,6 +48,36 @@ export function AddMangaForm({
         onChangeText={onTotalChaptersChange}
         keyboardType="numeric"
       />
+      <View style={styles.statusRow}>
+        <Pressable
+          onPress={() => onStatusChange('ongoing')}
+          style={[
+            styles.statusButton,
+            status === 'ongoing' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              status === 'ongoing' && styles.statusButtonTextActive,
+            ]}>
+            En cours
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onStatusChange('completed')}
+          style={[
+            styles.statusButton,
+            status === 'completed' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              status === 'completed' && styles.statusButtonTextActive,
+            ]}>
+            Terminé
+          </Text>
+        </Pressable>
+      </View>
       {formError !== '' && (
         <Text style={styles.formError}>{formError}</Text>
       )}
@@ -60,6 +96,28 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 8,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  statusButton: {
+    backgroundColor: '#eeeeee',
+    borderRadius: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  statusButtonActive: {
+    backgroundColor: '#2563eb',
+  },
+  statusButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333333',
+  },
+  statusButtonTextActive: {
+    color: '#ffffff',
   },
   formError: {
     color: '#dc2626',

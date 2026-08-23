@@ -14,23 +14,25 @@ const MANGAS_STORAGE_KEY = 'mangas';
 export default function HomeScreen() {
   const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
-    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115 },
-    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60 },
-    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90 },
-    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40 },
-    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100 },
+    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing' },
+    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing' },
+    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed' },
+    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing' },
+    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing' },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [newMangaTitle, setNewMangaTitle] = useState('');
   const [newMangaAuthor, setNewMangaAuthor] = useState('');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
+  const [newMangaStatus, setNewMangaStatus] = useState<Manga['status']>('ongoing');
   const [formError, setFormError] = useState('');
   const [isStorageLoaded, setIsStorageLoaded] = useState(false);
   const [editingMangaId, setEditingMangaId] = useState<number | null>(null);
   const [editMangaTitle, setEditMangaTitle] = useState('');
   const [editMangaAuthor, setEditMangaAuthor] = useState('');
   const [editMangaTotalChapters, setEditMangaTotalChapters] = useState('');
+  const [editMangaStatus, setEditMangaStatus] = useState<Manga['status']>('ongoing');
 
   useEffect(() => {
     async function loadMangas() {
@@ -46,13 +48,18 @@ export default function HomeScreen() {
             'Kagurabachi': 'Takeru Hokazono',
           };
           const migratedMangas = parsedMangas.map((manga) => {
-            if (typeof manga.author === 'string') {
-              return manga;
-            }
-
             return {
               ...manga,
-              author: demoAuthors[manga.title] ?? '',
+              author:
+                typeof manga.author === 'string'
+                  ? manga.author
+                  : demoAuthors[manga.title] ?? '',
+              status:
+                manga.status === 'ongoing' || manga.status === 'completed'
+                  ? manga.status
+                  : manga.title === 'Vinland Saga'
+                    ? 'completed'
+                    : 'ongoing',
             };
           });
           setMangas(migratedMangas);
@@ -143,12 +150,14 @@ export default function HomeScreen() {
       author: newMangaAuthor.trim(),
       chaptersRead: 0,
       totalChapters,
+      status: newMangaStatus,
     };
 
     setMangas((currentMangas) => [...currentMangas, newManga]);
     setNewMangaTitle('');
     setNewMangaAuthor('');
     setNewMangaTotalChapters('');
+    setNewMangaStatus('ongoing');
   }
 
   function openManga(id: number) {
@@ -163,6 +172,7 @@ export default function HomeScreen() {
     setEditMangaTitle(manga.title);
     setEditMangaAuthor(manga.author);
     setEditMangaTotalChapters(String(manga.totalChapters));
+    setEditMangaStatus(manga.status);
   }
 
   function cancelEditing() {
@@ -170,6 +180,7 @@ export default function HomeScreen() {
     setEditMangaTitle('');
     setEditMangaAuthor('');
     setEditMangaTotalChapters('');
+    setEditMangaStatus('ongoing');
   }
 
   function saveEditingManga() {
@@ -197,6 +208,7 @@ export default function HomeScreen() {
               title,
               author: editMangaAuthor.trim(),
               totalChapters,
+              status: editMangaStatus,
               chaptersRead: Math.min(manga.chaptersRead, totalChapters),
             }
           : manga
@@ -242,10 +254,12 @@ export default function HomeScreen() {
         title={newMangaTitle}
         author={newMangaAuthor}
         totalChapters={newMangaTotalChapters}
+        status={newMangaStatus}
         formError={formError}
         onTitleChange={setNewMangaTitle}
         onAuthorChange={setNewMangaAuthor}
         onTotalChaptersChange={setNewMangaTotalChapters}
+        onStatusChange={setNewMangaStatus}
         onSubmit={addManga}
       />
 
@@ -255,9 +269,11 @@ export default function HomeScreen() {
           title={editMangaTitle}
           author={editMangaAuthor}
           totalChapters={editMangaTotalChapters}
+          status={editMangaStatus}
           onTitleChange={setEditMangaTitle}
           onAuthorChange={setEditMangaAuthor}
           onTotalChaptersChange={setEditMangaTotalChapters}
+          onStatusChange={setEditMangaStatus}
           onCancel={cancelEditing}
           onSave={saveEditingManga}
         />

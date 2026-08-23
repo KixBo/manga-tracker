@@ -48,6 +48,9 @@ export default function MangaScreen() {
         <>
           <Text style={styles.subtitle}>{manga.title}</Text>
           <Text style={styles.authorText}>Auteur : {manga.author}</Text>
+          <Text style={styles.statusText}>
+            {manga.status === 'completed' ? 'Statut : Terminé' : 'Statut : En cours'}
+          </Text>
           <Text style={styles.progressText}>
             {manga.chaptersRead} / {manga.totalChapters} chapitres lus
           </Text>
@@ -92,6 +95,11 @@ const styles = StyleSheet.create({
     color: '#555555',
   },
   authorText: {
+    fontSize: 16,
+    color: '#555555',
+    marginTop: 4,
+  },
+  statusText: {
     fontSize: 16,
     color: '#555555',
     marginTop: 4,
