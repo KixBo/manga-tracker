@@ -16,6 +16,7 @@ export default function EditMangaScreen() {
   const [author, setAuthor] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [chaptersRead, setChaptersRead] = useState('');
   const [totalChapters, setTotalChapters] = useState('');
   const [status, setStatus] = useState<Manga['status']>('ongoing');
   const [readingStatus, setReadingStatus] = useState<Manga['readingStatus']>('to-read');
@@ -39,6 +40,7 @@ export default function EditMangaScreen() {
           setAuthor(foundManga.author);
           setCoverUrl(foundManga.coverUrl);
           setDescription(foundManga.description ?? '');
+          setChaptersRead(String(foundManga.chaptersRead));
           setTotalChapters(String(foundManga.totalChapters));
           setStatus(foundManga.status);
           setReadingStatus(foundManga.readingStatus);
@@ -65,6 +67,45 @@ export default function EditMangaScreen() {
       return;
     }
 
+    const parsedChaptersRead = Number(chaptersRead);
+    if (!Number.isFinite(parsedChaptersRead) || parsedChaptersRead < 0) {
+      Alert.alert(
+        'Erreur',
+        'Le nombre de chapitres lus doit être supérieur ou égal à 0.'
+      );
+      return;
+    }
+
+    let nextChaptersRead = parsedChaptersRead;
+    if (readingStatus === 'to-read') {
+      nextChaptersRead = 0;
+    } else if (readingStatus === 'completed') {
+      nextChaptersRead = nextTotalChapters;
+    } else if (readingStatus === 'reading') {
+      if (nextChaptersRead <= 0) {
+        Alert.alert(
+          'Erreur',
+          'Un manga en cours de lecture doit avoir au moins 1 chapitre lu.'
+        );
+        return;
+      }
+      if (nextChaptersRead >= nextTotalChapters) {
+        Alert.alert(
+          'Erreur',
+          'Un manga en cours de lecture doit avoir moins de chapitres lus que le nombre total de chapitres.'
+        );
+        return;
+      }
+    }
+
+    if (nextChaptersRead > nextTotalChapters) {
+      Alert.alert(
+        'Erreur',
+        'Le nombre de chapitres lus ne peut pas dépasser le nombre total de chapitres.'
+      );
+      return;
+    }
+
     try {
       const storedValue = await AsyncStorage.getItem(MANGAS_STORAGE_KEY);
       const parsedMangas: Manga[] =
@@ -82,7 +123,7 @@ export default function EditMangaScreen() {
               totalChapters: nextTotalChapters,
               status,
               readingStatus,
-              chaptersRead: Math.min(item.chaptersRead, nextTotalChapters),
+              chaptersRead: nextChaptersRead,
             }
           : item
       );
@@ -107,6 +148,7 @@ export default function EditMangaScreen() {
           author={author}
           coverUrl={coverUrl}
           description={description}
+          chaptersRead={chaptersRead}
           totalChapters={totalChapters}
           status={status}
           readingStatus={readingStatus}
@@ -114,6 +156,7 @@ export default function EditMangaScreen() {
           onAuthorChange={setAuthor}
           onCoverUrlChange={setCoverUrl}
           onDescriptionChange={setDescription}
+          onChaptersReadChange={setChaptersRead}
           onTotalChaptersChange={setTotalChapters}
           onStatusChange={setStatus}
           onReadingStatusChange={setReadingStatus}

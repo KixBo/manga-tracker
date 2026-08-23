@@ -7,6 +7,7 @@ type AddMangaFormProps = {
   author: string;
   coverUrl: string;
   description: string;
+  chaptersRead: string;
   totalChapters: string;
   status: Manga['status'];
   readingStatus: Manga['readingStatus'];
@@ -15,6 +16,7 @@ type AddMangaFormProps = {
   onAuthorChange: (text: string) => void;
   onCoverUrlChange: (text: string) => void;
   onDescriptionChange: (text: string) => void;
+  onChaptersReadChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
   onStatusChange: (status: Manga['status']) => void;
   onReadingStatusChange: (readingStatus: Manga['readingStatus']) => void;
@@ -27,6 +29,7 @@ export function AddMangaForm({
   author,
   coverUrl,
   description,
+  chaptersRead,
   totalChapters,
   status,
   readingStatus,
@@ -35,6 +38,7 @@ export function AddMangaForm({
   onAuthorChange,
   onCoverUrlChange,
   onDescriptionChange,
+  onChaptersReadChange,
   onTotalChaptersChange,
   onStatusChange,
   onReadingStatusChange,
@@ -67,6 +71,13 @@ export function AddMangaForm({
         value={description}
         onChangeText={onDescriptionChange}
         multiline
+      />
+      <TextInput
+        style={styles.formInput}
+        placeholder="Chapitres lus"
+        value={chaptersRead}
+        onChangeText={onChaptersReadChange}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.formInput}

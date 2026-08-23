@@ -64,6 +64,7 @@ export default function HomeScreen() {
   const [newMangaAuthor, setNewMangaAuthor] = useState('');
   const [newMangaCoverUrl, setNewMangaCoverUrl] = useState('');
   const [newMangaDescription, setNewMangaDescription] = useState('');
+  const [chaptersRead, setChaptersRead] = useState('0');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
   const [newMangaStatus, setNewMangaStatus] = useState<Manga['status']>('ongoing');
   const [newMangaReadingStatus, setNewMangaReadingStatus] = useState<Manga['readingStatus']>('to-read');
@@ -114,12 +115,16 @@ export default function HomeScreen() {
         }
 
         const nextChaptersRead = Math.min(manga.totalChapters, manga.chaptersRead + 1);
-        const nextReadingStatus =
+        let nextReadingStatus =
           manga.chaptersRead === 0 &&
           nextChaptersRead === 1 &&
           manga.readingStatus === 'to-read'
             ? 'reading'
             : manga.readingStatus;
+
+        if (nextChaptersRead === manga.totalChapters) {
+          nextReadingStatus = 'completed';
+        }
 
         return {
           ...manga,
@@ -138,12 +143,19 @@ export default function HomeScreen() {
         }
 
         const nextChaptersRead = Math.max(0, manga.chaptersRead - 1);
-        const nextReadingStatus =
+        let nextReadingStatus =
           manga.chaptersRead === 1 &&
           nextChaptersRead === 0 &&
           manga.readingStatus === 'reading'
             ? 'to-read'
             : manga.readingStatus;
+
+        if (
+          manga.readingStatus === 'completed' &&
+          nextChaptersRead < manga.totalChapters
+        ) {
+          nextReadingStatus = 'reading';
+        }
 
         return {
           ...manga,
@@ -196,6 +208,37 @@ export default function HomeScreen() {
       return;
     }
 
+    const parsedChaptersRead = Number(chaptersRead);
+    let nextChaptersRead = Number.isFinite(parsedChaptersRead)
+      ? parsedChaptersRead
+      : 0;
+
+    if (newMangaReadingStatus === 'to-read') {
+      nextChaptersRead = 0;
+    } else if (newMangaReadingStatus === 'completed') {
+      nextChaptersRead = totalChapters;
+    } else if (newMangaReadingStatus === 'reading') {
+      if (nextChaptersRead <= 0) {
+        setFormError(
+          'Un manga en cours de lecture doit avoir au moins 1 chapitre lu.'
+        );
+        return;
+      }
+      if (nextChaptersRead >= totalChapters) {
+        setFormError(
+          'Un manga en cours de lecture doit avoir moins de chapitres lus que le nombre total de chapitres.'
+        );
+        return;
+      }
+    }
+
+    if (nextChaptersRead > totalChapters) {
+      setFormError(
+        'Le nombre de chapitres lus ne peut pas dépasser le nombre total de chapitres.'
+      );
+      return;
+    }
+
     setFormError('');
 
     const newManga: Manga = {
@@ -205,7 +248,7 @@ export default function HomeScreen() {
       coverUrl: newMangaCoverUrl.trim(),
       description: newMangaDescription.trim(),
       isFavorite: false,
-      chaptersRead: 0,
+      chaptersRead: nextChaptersRead,
       totalChapters,
       status: newMangaStatus,
       readingStatus: newMangaReadingStatus,
@@ -216,6 +259,7 @@ export default function HomeScreen() {
     setNewMangaAuthor('');
     setNewMangaCoverUrl('');
     setNewMangaDescription('');
+    setChaptersRead('0');
     setNewMangaTotalChapters('');
     setNewMangaStatus('ongoing');
     setNewMangaReadingStatus('to-read');
@@ -276,6 +320,7 @@ export default function HomeScreen() {
           author={newMangaAuthor}
           coverUrl={newMangaCoverUrl}
           description={newMangaDescription}
+          chaptersRead={chaptersRead}
           totalChapters={newMangaTotalChapters}
           status={newMangaStatus}
           readingStatus={newMangaReadingStatus}
@@ -284,6 +329,7 @@ export default function HomeScreen() {
           onAuthorChange={setNewMangaAuthor}
           onCoverUrlChange={setNewMangaCoverUrl}
           onDescriptionChange={setNewMangaDescription}
+          onChaptersReadChange={setChaptersRead}
           onTotalChaptersChange={setNewMangaTotalChapters}
           onStatusChange={setNewMangaStatus}
           onReadingStatusChange={setNewMangaReadingStatus}
