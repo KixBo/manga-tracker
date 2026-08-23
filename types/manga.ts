@@ -7,8 +7,9 @@ export type Manga = {
   status: 'ongoing' | 'completed';
   coverUrl: string;
   description: string;
+  isFavorite: boolean;
 };
 
-export type MangaFilter = 'all' | 'ongoing' | 'completed';
+export type MangaFilter = 'all' | 'ongoing' | 'completed' | 'favorites';
 
 export type MangaSort = 'az' | 'za';

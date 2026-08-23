@@ -9,14 +9,16 @@ type MangaCardProps = {
   coverUrl: string;
   chaptersRead: number;
   totalChapters: number;
+  isFavorite: boolean;
   onIncrement: () => void;
   onDecrement: () => void;
   onDelete: () => void;
   onEdit: () => void;
   onOpen: () => void;
+  onToggleFavorite: () => void;
 };
 
-export function MangaCard({ title, author, status, coverUrl, chaptersRead, totalChapters, onIncrement, onDecrement, onDelete, onEdit, onOpen }: MangaCardProps) {
+export function MangaCard({ title, author, status, coverUrl, chaptersRead, totalChapters, isFavorite, onIncrement, onDecrement, onDelete, onEdit, onOpen, onToggleFavorite }: MangaCardProps) {
   const progressPercent =
     totalChapters === 0 ? 0 : (chaptersRead / totalChapters) * 100;
   const remainingChapters = totalChapters - chaptersRead;
@@ -28,7 +30,12 @@ export function MangaCard({ title, author, status, coverUrl, chaptersRead, total
           <Image source={{ uri: coverUrl }} style={styles.coverImage} />
         )}
         <View style={styles.infoColumn}>
-          <Text style={styles.cardTitle}>{title}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.cardTitle}>{title}</Text>
+            <Pressable onPress={onToggleFavorite} style={styles.favoriteButton}>
+              <Text style={styles.favoriteStar}>{isFavorite ? '★' : '☆'}</Text>
+            </Pressable>
+          </View>
           <Text style={styles.authorText}>{author}</Text>
           <Text style={styles.statusText}>
             {status === 'completed' ? 'Terminé' : 'En cours'}
@@ -103,11 +110,24 @@ const styles = StyleSheet.create({
   infoColumn: {
     flex: 1,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   cardTitle: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#111111',
     marginBottom: 2,
+  },
+  favoriteButton: {
+    paddingVertical: 4,
+    paddingLeft: 8,
+  },
+  favoriteStar: {
+    fontSize: 18,
+    color: '#111111',
   },
   authorText: {
     fontSize: 14,

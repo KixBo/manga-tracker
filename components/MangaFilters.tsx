@@ -71,6 +71,20 @@ export function MangaFilters({
             Terminés
           </Text>
         </Pressable>
+        <Pressable
+          onPress={() => onFilterChange('favorites')}
+          style={[
+            styles.filterButton,
+            selectedFilter === 'favorites' && styles.filterButtonSelected,
+          ]}>
+          <Text
+            style={[
+              styles.filterButtonText,
+              selectedFilter === 'favorites' && styles.filterButtonTextSelected,
+            ]}>
+            Favoris
+          </Text>
+        </Pressable>
       </View>
 
       <View style={styles.filterRow}>

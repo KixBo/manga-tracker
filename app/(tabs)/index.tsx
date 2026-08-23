@@ -34,6 +34,7 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
             : 'ongoing',
       coverUrl: typeof manga.coverUrl === 'string' ? manga.coverUrl : '',
       description: typeof manga.description === 'string' ? manga.description : '',
+      isFavorite: typeof manga.isFavorite === 'boolean' ? manga.isFavorite : false,
     };
   });
 }
@@ -41,11 +42,11 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
 export default function HomeScreen() {
   const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
-    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '', description: '' },
-    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '', description: '' },
-    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '', description: '' },
-    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '', description: '' },
-    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '', description: '' },
+    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
+    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
+    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '', description: '', isFavorite: false },
+    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
+    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [selectedSort, setSelectedSort] = useState<MangaSort>('az');
@@ -116,6 +117,16 @@ export default function HomeScreen() {
     );
   }
 
+  function toggleFavorite(id: number) {
+    setMangas((currentMangas) =>
+      currentMangas.map((manga) =>
+        manga.id === id
+          ? { ...manga, isFavorite: !manga.isFavorite }
+          : manga
+      )
+    );
+  }
+
   function deleteManga(id: number, title: string) {
     Alert.alert(
       `Supprimer ${title} ?`,
@@ -156,6 +167,7 @@ export default function HomeScreen() {
       author: newMangaAuthor.trim(),
       coverUrl: newMangaCoverUrl.trim(),
       description: newMangaDescription.trim(),
+      isFavorite: false,
       chaptersRead: 0,
       totalChapters,
       status: newMangaStatus,
@@ -192,6 +204,9 @@ export default function HomeScreen() {
     }
     if (selectedFilter === 'completed') {
       return manga.status === 'completed';
+    }
+    if (selectedFilter === 'favorites') {
+      return manga.isFavorite === true;
     }
     return true;
   }).sort((a, b) => {
@@ -251,6 +266,7 @@ export default function HomeScreen() {
             coverUrl={manga.coverUrl}
             chaptersRead={manga.chaptersRead}
             totalChapters={manga.totalChapters}
+            isFavorite={manga.isFavorite}
             onIncrement={() => incrementChapter(manga.id)}
             onDecrement={() => decrementChapter(manga.id)}
             onDelete={() => deleteManga(manga.id, manga.title)}
@@ -261,6 +277,7 @@ export default function HomeScreen() {
               } as unknown as Href)
             }
             onOpen={() => openManga(manga.id)}
+            onToggleFavorite={() => toggleFavorite(manga.id)}
           />
         ))
       )}
