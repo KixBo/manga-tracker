@@ -8,8 +8,9 @@ export type Manga = {
   coverUrl: string;
   description: string;
   isFavorite: boolean;
+  readingStatus: 'to-read' | 'reading' | 'completed';
 };
 
-export type MangaFilter = 'all' | 'ongoing' | 'completed' | 'favorites';
+export type MangaFilter = 'all' | 'to-read' | 'reading' | 'completed' | 'favorites';
 
 export type MangaSort = 'az' | 'za';

@@ -6,6 +6,7 @@ type MangaCardProps = {
   title: string;
   author: string;
   status: Manga['status'];
+  readingStatus: Manga['readingStatus'];
   coverUrl: string;
   chaptersRead: number;
   totalChapters: number;
@@ -18,7 +19,7 @@ type MangaCardProps = {
   onToggleFavorite: () => void;
 };
 
-export function MangaCard({ title, author, status, coverUrl, chaptersRead, totalChapters, isFavorite, onIncrement, onDecrement, onDelete, onEdit, onOpen, onToggleFavorite }: MangaCardProps) {
+export function MangaCard({ title, author, status, readingStatus, coverUrl, chaptersRead, totalChapters, isFavorite, onIncrement, onDecrement, onDelete, onEdit, onOpen, onToggleFavorite }: MangaCardProps) {
   const progressPercent =
     totalChapters === 0 ? 0 : (chaptersRead / totalChapters) * 100;
   const remainingChapters = totalChapters - chaptersRead;
@@ -38,7 +39,14 @@ export function MangaCard({ title, author, status, coverUrl, chaptersRead, total
           </View>
           <Text style={styles.authorText}>{author}</Text>
           <Text style={styles.statusText}>
-            {status === 'completed' ? 'Terminé' : 'En cours'}
+            {status === 'completed' ? 'Série : Terminée' : 'Série : En cours'}
+          </Text>
+          <Text style={styles.statusText}>
+            {readingStatus === 'to-read'
+              ? 'Lecture : À lire'
+              : readingStatus === 'completed'
+                ? 'Lecture : Terminé'
+                : 'Lecture : En cours'}
           </Text>
           <Text style={styles.cardSubtitle}>
             {chaptersRead} / {totalChapters} chapitres lus

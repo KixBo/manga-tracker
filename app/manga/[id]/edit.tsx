@@ -18,6 +18,7 @@ export default function EditMangaScreen() {
   const [description, setDescription] = useState('');
   const [totalChapters, setTotalChapters] = useState('');
   const [status, setStatus] = useState<Manga['status']>('ongoing');
+  const [readingStatus, setReadingStatus] = useState<Manga['readingStatus']>('to-read');
 
   useEffect(() => {
     async function loadManga() {
@@ -40,6 +41,7 @@ export default function EditMangaScreen() {
           setDescription(foundManga.description ?? '');
           setTotalChapters(String(foundManga.totalChapters));
           setStatus(foundManga.status);
+          setReadingStatus(foundManga.readingStatus);
         }
       } catch (error) {
         console.error(error);
@@ -79,6 +81,7 @@ export default function EditMangaScreen() {
               description: description.trim(),
               totalChapters: nextTotalChapters,
               status,
+              readingStatus,
               chaptersRead: Math.min(item.chaptersRead, nextTotalChapters),
             }
           : item
@@ -106,12 +109,14 @@ export default function EditMangaScreen() {
           description={description}
           totalChapters={totalChapters}
           status={status}
+          readingStatus={readingStatus}
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
           onCoverUrlChange={setCoverUrl}
           onDescriptionChange={setDescription}
           onTotalChaptersChange={setTotalChapters}
           onStatusChange={setStatus}
+          onReadingStatusChange={setReadingStatus}
           onCancel={() => router.back()}
           onSave={saveManga}
         />

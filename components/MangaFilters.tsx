@@ -44,15 +44,29 @@ export function MangaFilters({
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => onFilterChange('ongoing')}
+          onPress={() => onFilterChange('to-read')}
           style={[
             styles.filterButton,
-            selectedFilter === 'ongoing' && styles.filterButtonSelected,
+            selectedFilter === 'to-read' && styles.filterButtonSelected,
           ]}>
           <Text
             style={[
               styles.filterButtonText,
-              selectedFilter === 'ongoing' && styles.filterButtonTextSelected,
+              selectedFilter === 'to-read' && styles.filterButtonTextSelected,
+            ]}>
+            À lire
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onFilterChange('reading')}
+          style={[
+            styles.filterButton,
+            selectedFilter === 'reading' && styles.filterButtonSelected,
+          ]}>
+          <Text
+            style={[
+              styles.filterButtonText,
+              selectedFilter === 'reading' && styles.filterButtonTextSelected,
             ]}>
             En cours
           </Text>

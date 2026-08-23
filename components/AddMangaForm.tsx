@@ -9,6 +9,7 @@ type AddMangaFormProps = {
   description: string;
   totalChapters: string;
   status: Manga['status'];
+  readingStatus: Manga['readingStatus'];
   formError: string;
   onTitleChange: (text: string) => void;
   onAuthorChange: (text: string) => void;
@@ -16,6 +17,7 @@ type AddMangaFormProps = {
   onDescriptionChange: (text: string) => void;
   onTotalChaptersChange: (text: string) => void;
   onStatusChange: (status: Manga['status']) => void;
+  onReadingStatusChange: (readingStatus: Manga['readingStatus']) => void;
   onSubmit: () => void;
   onCancel: () => void;
 };
@@ -27,6 +29,7 @@ export function AddMangaForm({
   description,
   totalChapters,
   status,
+  readingStatus,
   formError,
   onTitleChange,
   onAuthorChange,
@@ -34,6 +37,7 @@ export function AddMangaForm({
   onDescriptionChange,
   onTotalChaptersChange,
   onStatusChange,
+  onReadingStatusChange,
   onSubmit,
   onCancel,
 }: AddMangaFormProps) {
@@ -71,6 +75,7 @@ export function AddMangaForm({
         onChangeText={onTotalChaptersChange}
         keyboardType="numeric"
       />
+      <Text style={styles.sectionLabel}>État de la série</Text>
       <View style={styles.statusRow}>
         <Pressable
           onPress={() => onStatusChange('ongoing')}
@@ -101,6 +106,51 @@ export function AddMangaForm({
           </Text>
         </Pressable>
       </View>
+      <Text style={styles.sectionLabel}>Ma lecture</Text>
+      <View style={styles.statusRow}>
+        <Pressable
+          onPress={() => onReadingStatusChange('to-read')}
+          style={[
+            styles.statusButton,
+            readingStatus === 'to-read' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              readingStatus === 'to-read' && styles.statusButtonTextActive,
+            ]}>
+            À lire
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onReadingStatusChange('reading')}
+          style={[
+            styles.statusButton,
+            readingStatus === 'reading' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              readingStatus === 'reading' && styles.statusButtonTextActive,
+            ]}>
+            En cours
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => onReadingStatusChange('completed')}
+          style={[
+            styles.statusButton,
+            readingStatus === 'completed' && styles.statusButtonActive,
+          ]}>
+          <Text
+            style={[
+              styles.statusButtonText,
+              readingStatus === 'completed' && styles.statusButtonTextActive,
+            ]}>
+            Terminé
+          </Text>
+        </Pressable>
+      </View>
       {formError !== '' && (
         <Text style={styles.formError}>{formError}</Text>
       )}
@@ -121,6 +171,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
+    marginBottom: 8,
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333333',
     marginBottom: 8,
   },
   statusRow: {

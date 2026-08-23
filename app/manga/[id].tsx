@@ -55,7 +55,16 @@ export default function MangaScreen() {
           <Text style={styles.subtitle}>{manga.title}</Text>
           <Text style={styles.authorText}>Auteur : {manga.author}</Text>
           <Text style={styles.statusText}>
-            {manga.status === 'completed' ? 'Statut : Terminé' : 'Statut : En cours'}
+            {manga.status === 'completed'
+              ? 'État de la série : Terminée'
+              : 'État de la série : En cours'}
+          </Text>
+          <Text style={styles.statusText}>
+            {manga.readingStatus === 'to-read'
+              ? 'Ma lecture : À lire'
+              : manga.readingStatus === 'completed'
+                ? 'Ma lecture : Terminé'
+                : 'Ma lecture : En cours'}
           </Text>
           {manga.description !== '' && (
             <>

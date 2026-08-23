@@ -35,6 +35,14 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
       coverUrl: typeof manga.coverUrl === 'string' ? manga.coverUrl : '',
       description: typeof manga.description === 'string' ? manga.description : '',
       isFavorite: typeof manga.isFavorite === 'boolean' ? manga.isFavorite : false,
+      readingStatus:
+        manga.readingStatus === 'to-read' ||
+        manga.readingStatus === 'reading' ||
+        manga.readingStatus === 'completed'
+          ? manga.readingStatus
+          : manga.chaptersRead === 0
+            ? 'to-read'
+            : 'reading',
     };
   });
 }
@@ -42,11 +50,11 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
 export default function HomeScreen() {
   const router = useRouter();
   const [mangas, setMangas] = useState<Manga[]>([
-    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
-    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
-    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '', description: '', isFavorite: false },
-    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
-    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '', description: '', isFavorite: false },
+    { id: 1, title: 'One Piece', author: 'Eiichiro Oda', chaptersRead: 112, totalChapters: 115, status: 'ongoing', coverUrl: '', description: '', isFavorite: false, readingStatus: 'reading' },
+    { id: 2, title: 'Berserk', author: 'Kentaro Miura', chaptersRead: 50, totalChapters: 60, status: 'ongoing', coverUrl: '', description: '', isFavorite: false, readingStatus: 'reading' },
+    { id: 3, title: 'Vinland Saga', author: 'Makoto Yukimura', chaptersRead: 80, totalChapters: 90, status: 'completed', coverUrl: '', description: '', isFavorite: false, readingStatus: 'reading' },
+    { id: 4, title: 'Kingdom', author: 'Yasuhisa Hara', chaptersRead: 35, totalChapters: 40, status: 'ongoing', coverUrl: '', description: '', isFavorite: false, readingStatus: 'reading' },
+    { id: 5, title: 'Kagurabachi', author: 'Takeru Hokazono', chaptersRead: 35, totalChapters: 100, status: 'ongoing', coverUrl: '', description: '', isFavorite: false, readingStatus: 'reading' },
   ]);
   const [selectedFilter, setSelectedFilter] = useState<MangaFilter>('all');
   const [selectedSort, setSelectedSort] = useState<MangaSort>('az');
@@ -58,6 +66,7 @@ export default function HomeScreen() {
   const [newMangaDescription, setNewMangaDescription] = useState('');
   const [newMangaTotalChapters, setNewMangaTotalChapters] = useState('');
   const [newMangaStatus, setNewMangaStatus] = useState<Manga['status']>('ongoing');
+  const [newMangaReadingStatus, setNewMangaReadingStatus] = useState<Manga['readingStatus']>('to-read');
   const [formError, setFormError] = useState('');
   const [isStorageLoaded, setIsStorageLoaded] = useState(false);
 
@@ -99,21 +108,49 @@ export default function HomeScreen() {
 
   function incrementChapter(id: number) {
     setMangas((currentMangas) =>
-      currentMangas.map((manga) =>
-        manga.id === id
-          ? { ...manga, chaptersRead: Math.min(manga.totalChapters, manga.chaptersRead + 1) }
-          : manga
-      )
+      currentMangas.map((manga) => {
+        if (manga.id !== id) {
+          return manga;
+        }
+
+        const nextChaptersRead = Math.min(manga.totalChapters, manga.chaptersRead + 1);
+        const nextReadingStatus =
+          manga.chaptersRead === 0 &&
+          nextChaptersRead === 1 &&
+          manga.readingStatus === 'to-read'
+            ? 'reading'
+            : manga.readingStatus;
+
+        return {
+          ...manga,
+          chaptersRead: nextChaptersRead,
+          readingStatus: nextReadingStatus,
+        };
+      })
     );
   }
 
   function decrementChapter(id: number) {
     setMangas((currentMangas) =>
-      currentMangas.map((manga) =>
-        manga.id === id
-          ? { ...manga, chaptersRead: Math.max(0, manga.chaptersRead - 1) }
-          : manga
-      )
+      currentMangas.map((manga) => {
+        if (manga.id !== id) {
+          return manga;
+        }
+
+        const nextChaptersRead = Math.max(0, manga.chaptersRead - 1);
+        const nextReadingStatus =
+          manga.chaptersRead === 1 &&
+          nextChaptersRead === 0 &&
+          manga.readingStatus === 'reading'
+            ? 'to-read'
+            : manga.readingStatus;
+
+        return {
+          ...manga,
+          chaptersRead: nextChaptersRead,
+          readingStatus: nextReadingStatus,
+        };
+      })
     );
   }
 
@@ -171,6 +208,7 @@ export default function HomeScreen() {
       chaptersRead: 0,
       totalChapters,
       status: newMangaStatus,
+      readingStatus: newMangaReadingStatus,
     };
 
     setMangas((currentMangas) => [...currentMangas, newManga]);
@@ -180,6 +218,7 @@ export default function HomeScreen() {
     setNewMangaDescription('');
     setNewMangaTotalChapters('');
     setNewMangaStatus('ongoing');
+    setNewMangaReadingStatus('to-read');
     setIsAddFormVisible(false);
   }
 
@@ -199,11 +238,14 @@ export default function HomeScreen() {
       return false;
     }
 
-    if (selectedFilter === 'ongoing') {
-      return manga.status === 'ongoing';
+    if (selectedFilter === 'to-read') {
+      return manga.readingStatus === 'to-read';
+    }
+    if (selectedFilter === 'reading') {
+      return manga.readingStatus === 'reading';
     }
     if (selectedFilter === 'completed') {
-      return manga.status === 'completed';
+      return manga.readingStatus === 'completed';
     }
     if (selectedFilter === 'favorites') {
       return manga.isFavorite === true;
@@ -236,6 +278,7 @@ export default function HomeScreen() {
           description={newMangaDescription}
           totalChapters={newMangaTotalChapters}
           status={newMangaStatus}
+          readingStatus={newMangaReadingStatus}
           formError={formError}
           onTitleChange={setNewMangaTitle}
           onAuthorChange={setNewMangaAuthor}
@@ -243,6 +286,7 @@ export default function HomeScreen() {
           onDescriptionChange={setNewMangaDescription}
           onTotalChaptersChange={setNewMangaTotalChapters}
           onStatusChange={setNewMangaStatus}
+          onReadingStatusChange={setNewMangaReadingStatus}
           onSubmit={addManga}
           onCancel={() => setIsAddFormVisible(false)}
         />
@@ -263,6 +307,7 @@ export default function HomeScreen() {
             title={manga.title}
             author={manga.author}
             status={manga.status}
+            readingStatus={manga.readingStatus}
             coverUrl={manga.coverUrl}
             chaptersRead={manga.chaptersRead}
             totalChapters={manga.totalChapters}
