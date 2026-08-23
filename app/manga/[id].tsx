@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { Manga } from '@/types/manga';
 
@@ -45,7 +45,7 @@ export default function MangaScreen() {
       : (manga.chaptersRead / manga.totalChapters) * 100;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Fiche manga</Text>
       {manga ? (
         <>
@@ -95,7 +95,7 @@ export default function MangaScreen() {
       ) : (
         <Text style={styles.subtitle}>Manga introuvable</Text>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -103,6 +103,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  content: {
     paddingHorizontal: 24,
     paddingTop: 24,
   },

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { EditMangaForm } from '@/components/EditMangaForm';
 import type { Manga } from '@/types/manga';
@@ -95,7 +95,7 @@ export default function EditMangaScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Modifier un manga</Text>
       {manga ? (
         <EditMangaForm
@@ -118,7 +118,7 @@ export default function EditMangaScreen() {
       ) : (
         <Text style={styles.subtitle}>Manga introuvable</Text>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -126,8 +126,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  content: {
     paddingHorizontal: 24,
     paddingTop: 24,
+    paddingBottom: 24,
   },
   title: {
     fontSize: 28,
