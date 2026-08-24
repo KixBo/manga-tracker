@@ -62,16 +62,19 @@ export default function EditMangaScreen() {
     }
 
     const nextTotalChapters = Number(totalChapters);
-    if (!Number.isFinite(nextTotalChapters) || nextTotalChapters <= 0) {
-      Alert.alert('Erreur', 'Le nombre de chapitres doit être supérieur à 0.');
+    if (!Number.isInteger(nextTotalChapters) || nextTotalChapters <= 0) {
+      Alert.alert(
+        'Erreur',
+        'Le nombre total de chapitres doit être un nombre entier supérieur à 0.'
+      );
       return;
     }
 
     const parsedChaptersRead = Number(chaptersRead);
-    if (!Number.isFinite(parsedChaptersRead) || parsedChaptersRead < 0) {
+    if (!Number.isInteger(parsedChaptersRead) || parsedChaptersRead < 0) {
       Alert.alert(
         'Erreur',
-        'Le nombre de chapitres lus doit être supérieur ou égal à 0.'
+        'Le nombre de chapitres lus doit être un nombre entier supérieur ou égal à 0.'
       );
       return;
     }
