@@ -20,8 +20,19 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
   };
 
   return parsedMangas.map((manga) => {
+    const safeTotalChapters =
+      Number.isInteger(manga.totalChapters) && manga.totalChapters > 0
+        ? manga.totalChapters
+        : 1;
+
+    const safeChaptersRead =
+      Number.isInteger(manga.chaptersRead) && manga.chaptersRead >= 0
+        ? Math.min(manga.chaptersRead, safeTotalChapters)
+        : 0;
+
     return {
       ...manga,
+      title: typeof manga.title === 'string' ? manga.title : 'Manga sans titre',
       author:
         typeof manga.author === 'string'
           ? manga.author
@@ -35,12 +46,14 @@ function migrateStoredMangas(parsedMangas: Manga[]): Manga[] {
       coverUrl: typeof manga.coverUrl === 'string' ? manga.coverUrl : '',
       description: typeof manga.description === 'string' ? manga.description : '',
       isFavorite: typeof manga.isFavorite === 'boolean' ? manga.isFavorite : false,
+      totalChapters: safeTotalChapters,
+      chaptersRead: safeChaptersRead,
       readingStatus:
         manga.readingStatus === 'to-read' ||
         manga.readingStatus === 'reading' ||
         manga.readingStatus === 'completed'
           ? manga.readingStatus
-          : manga.chaptersRead === 0
+          : safeChaptersRead === 0
             ? 'to-read'
             : 'reading',
     };
