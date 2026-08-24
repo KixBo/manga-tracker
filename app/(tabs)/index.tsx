@@ -203,15 +203,22 @@ export default function HomeScreen() {
     }
 
     const totalChapters = Number(newMangaTotalChapters);
-    if (!Number.isFinite(totalChapters) || totalChapters <= 0) {
-      setFormError('Le nombre de chapitres doit être supérieur à 0.');
+    if (!Number.isInteger(totalChapters) || totalChapters <= 0) {
+      setFormError(
+        'Le nombre total de chapitres doit être un nombre entier supérieur à 0.'
+      );
       return;
     }
 
     const parsedChaptersRead = Number(chaptersRead);
-    let nextChaptersRead = Number.isFinite(parsedChaptersRead)
-      ? parsedChaptersRead
-      : 0;
+    if (!Number.isInteger(parsedChaptersRead) || parsedChaptersRead < 0) {
+      setFormError(
+        'Le nombre de chapitres lus doit être un nombre entier supérieur ou égal à 0.'
+      );
+      return;
+    }
+
+    let nextChaptersRead = parsedChaptersRead;
 
     if (newMangaReadingStatus === 'to-read') {
       nextChaptersRead = 0;
