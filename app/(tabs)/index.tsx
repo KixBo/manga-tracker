@@ -352,7 +352,6 @@ export default function HomeScreen() {
             key={manga.id}
             title={manga.title}
             author={manga.author}
-            status={manga.status}
             readingStatus={manga.readingStatus}
             coverUrl={manga.coverUrl}
             chaptersRead={manga.chaptersRead}

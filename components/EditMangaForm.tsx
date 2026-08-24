@@ -73,11 +73,11 @@ export function EditMangaForm({
         value={author}
         onChangeText={onAuthorChange}
       />
-      <Pressable style={styles.filterButton} onPress={pickCoverImage}>
-        <Text style={styles.filterButtonText}>Choisir une nouvelle couverture</Text>
+      <Pressable style={styles.coverButton} onPress={pickCoverImage}>
+        <Text style={styles.coverButtonText}>Choisir une nouvelle couverture</Text>
       </Pressable>
       <TextInput
-        style={styles.formInput}
+        style={[styles.formInput, styles.synopsisInput]}
         placeholder="Description / Synopsis"
         value={description}
         onChangeText={onDescriptionChange}
@@ -173,12 +173,12 @@ export function EditMangaForm({
           </Text>
         </Pressable>
       </View>
-      <View style={styles.filterRow}>
-        <Pressable style={styles.filterButton} onPress={onCancel}>
-          <Text style={styles.filterButtonText}>Annuler</Text>
+      <View style={styles.formActionRow}>
+        <Pressable style={styles.cancelButton} onPress={onCancel}>
+          <Text style={styles.cancelButtonText}>Annuler</Text>
         </Pressable>
-        <Pressable style={styles.addButton} onPress={onSave}>
-          <Text style={styles.addButtonText}>Enregistrer</Text>
+        <Pressable style={styles.primaryButton} onPress={onSave}>
+          <Text style={styles.primaryButtonText}>Enregistrer</Text>
         </Pressable>
       </View>
     </>
@@ -198,6 +198,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 8,
+  },
+  synopsisInput: {
+    minHeight: 100,
+    textAlignVertical: 'top',
+  },
+  coverButton: {
+    backgroundColor: '#eeeeee',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  coverButtonText: {
+    color: '#333333',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   sectionLabel: {
     fontSize: 14,
@@ -227,30 +244,31 @@ const styles = StyleSheet.create({
   statusButtonTextActive: {
     color: '#ffffff',
   },
-  filterRow: {
+  formActionRow: {
     flexDirection: 'row',
     gap: 8,
     marginBottom: 16,
   },
-  filterButton: {
+  cancelButton: {
+    flex: 1,
     backgroundColor: '#eeeeee',
-    borderRadius: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
   },
-  filterButtonText: {
-    fontSize: 14,
-    fontWeight: 'bold',
+  cancelButtonText: {
     color: '#333333',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
-  addButton: {
+  primaryButton: {
+    flex: 1,
     backgroundColor: '#2563eb',
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
-    marginBottom: 16,
   },
-  addButtonText: {
+  primaryButtonText: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',

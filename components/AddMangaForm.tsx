@@ -72,11 +72,11 @@ export function AddMangaForm({
         value={author}
         onChangeText={onAuthorChange}
       />
-      <Pressable style={styles.cancelButton} onPress={pickCoverImage}>
-        <Text style={styles.cancelButtonText}>Choisir une image depuis la galerie</Text>
+      <Pressable style={styles.coverButton} onPress={pickCoverImage}>
+        <Text style={styles.coverButtonText}>Choisir une image depuis la galerie</Text>
       </Pressable>
       <TextInput
-        style={styles.formInput}
+        style={[styles.formInput, styles.synopsisInput]}
         placeholder="Description / Synopsis"
         value={description}
         onChangeText={onDescriptionChange}
@@ -175,12 +175,14 @@ export function AddMangaForm({
       {formError !== '' && (
         <Text style={styles.formError}>{formError}</Text>
       )}
-      <Pressable style={styles.addButton} onPress={onSubmit}>
-        <Text style={styles.addButtonText}>Ajouter le manga</Text>
-      </Pressable>
-      <Pressable style={styles.cancelButton} onPress={onCancel}>
-        <Text style={styles.cancelButtonText}>Annuler</Text>
-      </Pressable>
+      <View style={styles.formActionRow}>
+        <Pressable style={styles.cancelButton} onPress={onCancel}>
+          <Text style={styles.cancelButtonText}>Annuler</Text>
+        </Pressable>
+        <Pressable style={styles.primaryButton} onPress={onSubmit}>
+          <Text style={styles.primaryButtonText}>Ajouter le manga</Text>
+        </Pressable>
+      </View>
     </>
   );
 }
@@ -193,6 +195,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 8,
+  },
+  synopsisInput: {
+    minHeight: 100,
+    textAlignVertical: 'top',
+  },
+  coverButton: {
+    backgroundColor: '#eeeeee',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  coverButtonText: {
+    color: '#333333',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   sectionLabel: {
     fontSize: 14,
@@ -227,27 +246,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 8,
   },
-  addButton: {
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
+  formActionRow: {
+    flexDirection: 'row',
+    gap: 8,
     marginBottom: 16,
   },
-  addButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   cancelButton: {
+    flex: 1,
     backgroundColor: '#eeeeee',
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
-    marginBottom: 16,
   },
   cancelButtonText: {
     color: '#333333',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  primaryButton: {
+    flex: 1,
+    backgroundColor: '#2563eb',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  primaryButtonText: {
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -5,7 +5,6 @@ import type { Manga } from '@/types/manga';
 type MangaCardProps = {
   title: string;
   author: string;
-  status: Manga['status'];
   readingStatus: Manga['readingStatus'];
   coverUrl: string;
   chaptersRead: number;
@@ -19,10 +18,9 @@ type MangaCardProps = {
   onToggleFavorite: () => void;
 };
 
-export function MangaCard({ title, author, status, readingStatus, coverUrl, chaptersRead, totalChapters, isFavorite, onIncrement, onDecrement, onDelete, onEdit, onOpen, onToggleFavorite }: MangaCardProps) {
+export function MangaCard({ title, author, readingStatus, coverUrl, chaptersRead, totalChapters, isFavorite, onIncrement, onDecrement, onDelete, onEdit, onOpen, onToggleFavorite }: MangaCardProps) {
   const progressPercent =
     totalChapters === 0 ? 0 : (chaptersRead / totalChapters) * 100;
-  const remainingChapters = totalChapters - chaptersRead;
 
   return (
     <View style={styles.card}>
@@ -38,26 +36,18 @@ export function MangaCard({ title, author, status, readingStatus, coverUrl, chap
             </Pressable>
           </View>
           <Text style={styles.authorText}>{author}</Text>
-          <Text style={styles.statusText}>
-            {status === 'completed' ? 'Série : Terminée' : 'Série : En cours'}
-          </Text>
-          <Text style={styles.statusText}>
-            {readingStatus === 'to-read'
-              ? 'Lecture : À lire'
-              : readingStatus === 'completed'
-                ? 'Lecture : Terminé'
-                : 'Lecture : En cours'}
-          </Text>
+          <View style={styles.readingStatusBadge}>
+            <Text style={styles.readingStatusBadgeText}>
+              {readingStatus === 'to-read'
+                ? 'À lire'
+                : readingStatus === 'completed'
+                  ? 'Terminé'
+                  : 'En cours de lecture'}
+            </Text>
+          </View>
           <Text style={styles.cardSubtitle}>
             {chaptersRead} / {totalChapters} chapitres lus
           </Text>
-          {remainingChapters === 0 ? (
-            <Text style={styles.remainingText}>À jour</Text>
-          ) : remainingChapters === 1 ? (
-            <Text style={styles.remainingText}>1 chapitre restant</Text>
-          ) : (
-            <Text style={styles.remainingText}>{remainingChapters} chapitres restants</Text>
-          )}
           <View style={styles.progressBar}>
             <View style={[styles.progressFill, { width: `${progressPercent}%` }]} />
           </View>
@@ -71,7 +61,7 @@ export function MangaCard({ title, author, status, readingStatus, coverUrl, chap
             styles.chapterButton,
             chaptersRead === 0 && styles.buttonDisabled,
           ]}>
-          <Text style={styles.chapterButtonText}>-1 chapitre</Text>
+          <Text style={styles.chapterButtonText}>-1</Text>
         </Pressable>
         <Pressable
           disabled={chaptersRead === totalChapters}
@@ -80,12 +70,12 @@ export function MangaCard({ title, author, status, readingStatus, coverUrl, chap
             styles.chapterButton,
             chaptersRead === totalChapters && styles.buttonDisabled,
           ]}>
-          <Text style={styles.chapterButtonText}>+1 chapitre</Text>
+          <Text style={styles.chapterButtonText}>+1</Text>
         </Pressable>
       </View>
       <View style={styles.actionButtonRow}>
-        <Pressable onPress={onOpen} style={styles.actionButton}>
-          <Text style={styles.buttonText}>Voir la fiche</Text>
+        <Pressable onPress={onOpen} style={styles.openButton}>
+          <Text style={styles.openButtonText}>Voir la fiche</Text>
         </Pressable>
         <Pressable onPress={onEdit} style={styles.actionButton}>
           <Text style={styles.editText}>Modifier</Text>
@@ -141,19 +131,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555555',
   },
-  statusText: {
-    fontSize: 13,
-    color: '#777777',
+  readingStatusBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#eeeeee',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     marginBottom: 2,
+  },
+  readingStatusBadgeText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#333333',
   },
   cardSubtitle: {
     fontSize: 14,
     color: '#555555',
-  },
-  remainingText: {
-    fontSize: 13,
-    color: '#777777',
-    marginTop: 2,
   },
   progressBar: {
     height: 8,
@@ -175,8 +168,20 @@ const styles = StyleSheet.create({
   actionButtonRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 4,
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 8,
+  },
+  openButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  openButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
   actionButton: {
     paddingVertical: 8,
@@ -185,18 +190,13 @@ const styles = StyleSheet.create({
   chapterButton: {
     backgroundColor: '#2563eb',
     borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
   },
   chapterButtonText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#ffffff',
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#2563eb',
   },
   buttonDisabled: {
     opacity: 0.4,

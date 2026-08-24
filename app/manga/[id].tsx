@@ -52,44 +52,52 @@ export default function MangaScreen() {
           {manga.coverUrl !== '' && (
             <Image source={{ uri: manga.coverUrl }} style={styles.coverImage} />
           )}
-          <Text style={styles.subtitle}>{manga.title}</Text>
+          <Text style={styles.mangaTitle}>{manga.title}</Text>
           <Text style={styles.authorText}>Auteur : {manga.author}</Text>
-          <Text style={styles.statusText}>
-            {manga.status === 'completed'
-              ? 'État de la série : Terminée'
-              : 'État de la série : En cours'}
-          </Text>
-          <Text style={styles.statusText}>
-            {manga.readingStatus === 'to-read'
-              ? 'Ma lecture : À lire'
-              : manga.readingStatus === 'completed'
-                ? 'Ma lecture : Terminé'
-                : 'Ma lecture : En cours'}
-          </Text>
+          <View style={styles.statusBadgeRow}>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusBadgeText}>
+                {manga.status === 'completed'
+                  ? 'État de la série : Terminée'
+                  : 'État de la série : En cours'}
+              </Text>
+            </View>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusBadgeText}>
+                {manga.readingStatus === 'to-read'
+                  ? 'Ma lecture : À lire'
+                  : manga.readingStatus === 'completed'
+                    ? 'Ma lecture : Terminé'
+                    : 'Ma lecture : En cours'}
+              </Text>
+            </View>
+          </View>
           {manga.description !== '' && (
-            <>
+            <View style={styles.synopsisSection}>
               <Text style={styles.descriptionTitle}>Synopsis</Text>
               <Text style={styles.descriptionText}>{manga.description}</Text>
-            </>
-          )}
-          <Text style={styles.progressText}>
-            {manga.chaptersRead} / {manga.totalChapters} chapitres lus
-          </Text>
-          <View style={styles.progressRow}>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${progressPercent}%` }]} />
             </View>
-            <Text style={styles.percentText}>{Math.round(progressPercent)} %</Text>
-          </View>
-          {remainingChapters === 0 ? (
-            <Text style={styles.remainingText}>À jour</Text>
-          ) : remainingChapters === 1 ? (
-            <Text style={styles.remainingText}>1 chapitre restant</Text>
-          ) : (
-            <Text style={styles.remainingText}>
-              {remainingChapters} chapitres restants
-            </Text>
           )}
+          <View style={styles.progressSection}>
+            <Text style={styles.progressText}>
+              {manga.chaptersRead} / {manga.totalChapters} chapitres lus
+            </Text>
+            <View style={styles.progressRow}>
+              <View style={styles.progressBar}>
+                <View style={[styles.progressFill, { width: `${progressPercent}%` }]} />
+              </View>
+              <Text style={styles.percentText}>{Math.round(progressPercent)} %</Text>
+            </View>
+            {remainingChapters === 0 ? (
+              <Text style={styles.remainingText}>À jour</Text>
+            ) : remainingChapters === 1 ? (
+              <Text style={styles.remainingText}>1 chapitre restant</Text>
+            ) : (
+              <Text style={styles.remainingText}>
+                {remainingChapters} chapitres restants
+              </Text>
+            )}
+          </View>
           <Pressable
             onPress={() =>
               router.push({
@@ -118,9 +126,9 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#111111',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#777777',
     marginBottom: 8,
   },
   coverImage: {
@@ -128,6 +136,11 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 8,
     marginBottom: 12,
+  },
+  mangaTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#111111',
   },
   subtitle: {
     fontSize: 18,
@@ -138,32 +151,55 @@ const styles = StyleSheet.create({
     color: '#555555',
     marginTop: 4,
   },
-  statusText: {
-    fontSize: 16,
-    color: '#555555',
-    marginTop: 4,
+  statusBadgeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+  statusBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#eeeeee',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  statusBadgeText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#333333',
+  },
+  synopsisSection: {
+    backgroundColor: '#f7f7f7',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 16,
   },
   descriptionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333333',
-    marginTop: 16,
+    marginBottom: 6,
   },
   descriptionText: {
     fontSize: 15,
     color: '#555555',
-    marginTop: 4,
     lineHeight: 22,
+  },
+  progressSection: {
+    backgroundColor: '#f7f7f7',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 16,
   },
   progressText: {
     fontSize: 16,
     color: '#555555',
-    marginTop: 8,
   },
   remainingText: {
     fontSize: 14,
     color: '#777777',
-    marginTop: 4,
+    marginTop: 6,
   },
   progressRow: {
     flexDirection: 'row',
@@ -188,13 +224,17 @@ const styles = StyleSheet.create({
     color: '#555555',
   },
   actionButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    backgroundColor: '#2563eb',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignSelf: 'flex-start',
+    marginTop: 16,
+    marginBottom: 24,
   },
   editText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#2563eb',
+    color: '#ffffff',
   },
 });

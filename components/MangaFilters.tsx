@@ -28,7 +28,7 @@ export function MangaFilters({
         onChangeText={onSearchChange}
       />
 
-      <View style={styles.filterRow}>
+      <View style={styles.wrappingFilterRow}>
         <Pressable
           onPress={() => onFilterChange('all')}
           style={[
@@ -101,6 +101,7 @@ export function MangaFilters({
         </Pressable>
       </View>
 
+      <Text style={styles.sortLabel}>Trier par</Text>
       <View style={styles.filterRow}>
         <Pressable
           onPress={() => onSortChange('az')}
@@ -146,6 +147,17 @@ const styles = StyleSheet.create({
   },
   filterRow: {
     flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  sortLabel: {
+    fontSize: 13,
+    color: '#555555',
+    marginBottom: 8,
+  },
+  wrappingFilterRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
     marginBottom: 16,
   },
