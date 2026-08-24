@@ -195,6 +195,18 @@ export default function HomeScreen() {
     );
   }
 
+  function resetAddMangaForm() {
+    setNewMangaTitle('');
+    setNewMangaAuthor('');
+    setNewMangaCoverUrl('');
+    setNewMangaDescription('');
+    setChaptersRead('0');
+    setNewMangaTotalChapters('');
+    setNewMangaStatus('ongoing');
+    setNewMangaReadingStatus('to-read');
+    setFormError('');
+  }
+
   function addManga() {
     const title = newMangaTitle.trim();
     if (title === '') {
@@ -262,14 +274,7 @@ export default function HomeScreen() {
     };
 
     setMangas((currentMangas) => [...currentMangas, newManga]);
-    setNewMangaTitle('');
-    setNewMangaAuthor('');
-    setNewMangaCoverUrl('');
-    setNewMangaDescription('');
-    setChaptersRead('0');
-    setNewMangaTotalChapters('');
-    setNewMangaStatus('ongoing');
-    setNewMangaReadingStatus('to-read');
+    resetAddMangaForm();
     setIsAddFormVisible(false);
   }
 
@@ -341,7 +346,10 @@ export default function HomeScreen() {
           onStatusChange={setNewMangaStatus}
           onReadingStatusChange={setNewMangaReadingStatus}
           onSubmit={addManga}
-          onCancel={() => setIsAddFormVisible(false)}
+          onCancel={() => {
+            resetAddMangaForm();
+            setIsAddFormVisible(false);
+          }}
         />
       ) : (
         <Pressable
