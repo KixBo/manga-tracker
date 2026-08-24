@@ -53,7 +53,9 @@ export default function MangaScreen() {
             <Image source={{ uri: manga.coverUrl }} style={styles.coverImage} />
           )}
           <Text style={styles.mangaTitle}>{manga.title}</Text>
-          <Text style={styles.authorText}>Auteur : {manga.author}</Text>
+          {manga.author !== '' && (
+            <Text style={styles.authorText}>Auteur : {manga.author}</Text>
+          )}
           <View style={styles.statusBadgeRow}>
             <View style={styles.statusBadge}>
               <Text style={styles.statusBadgeText}>

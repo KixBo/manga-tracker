@@ -35,7 +35,9 @@ export function MangaCard({ title, author, readingStatus, coverUrl, chaptersRead
               <Text style={styles.favoriteStar}>{isFavorite ? '★' : '☆'}</Text>
             </Pressable>
           </View>
-          <Text style={styles.authorText}>{author}</Text>
+          {author !== '' && (
+            <Text style={styles.authorText}>{author}</Text>
+          )}
           <View style={styles.readingStatusBadge}>
             <Text style={styles.readingStatusBadgeText}>
               {readingStatus === 'to-read'
