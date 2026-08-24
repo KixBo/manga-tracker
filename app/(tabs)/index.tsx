@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Href, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AddMangaForm } from '@/components/AddMangaForm';
 import { MangaCard } from '@/components/MangaCard';
@@ -298,6 +298,11 @@ export default function HomeScreen() {
     });
   }
 
+  const totalMangas = mangas.length;
+  const toReadCount = mangas.filter((manga) => manga.readingStatus === 'to-read').length;
+  const readingCount = mangas.filter((manga) => manga.readingStatus === 'reading').length;
+  const completedCount = mangas.filter((manga) => manga.readingStatus === 'completed').length;
+
   const filteredMangas = mangas.filter((manga) => {
     const matchesSearch = manga.title
       .toLowerCase()
@@ -329,6 +334,24 @@ export default function HomeScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Manga Tracker</Text>
       <Text style={styles.subtitle}>Ma bibliothèque</Text>
+      <View style={styles.librarySummary}>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{totalMangas}</Text>
+          <Text style={styles.summaryLabel}>Total</Text>
+        </View>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{toReadCount}</Text>
+          <Text style={styles.summaryLabel}>À lire</Text>
+        </View>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{readingCount}</Text>
+          <Text style={styles.summaryLabel}>En cours</Text>
+        </View>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{completedCount}</Text>
+          <Text style={styles.summaryLabel}>Terminés</Text>
+        </View>
+      </View>
 
       <MangaFilters
         searchQuery={searchQuery}
@@ -422,6 +445,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#555555',
     marginBottom: 16,
+  },
+  librarySummary: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  summaryItem: {
+    flex: 1,
+    backgroundColor: '#f7f7f7',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    alignItems: 'center',
+  },
+  summaryNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111111',
+  },
+  summaryLabel: {
+    fontSize: 12,
+    color: '#777777',
+    marginTop: 2,
   },
   emptyText: {
     fontSize: 14,
